@@ -4,7 +4,6 @@ using UnityEngine;
 public class Cloud : MonoBehaviour
 {
     private float speed;
-    private Vector3 originalPos;
 
     public void Awake()
     {
@@ -16,13 +15,12 @@ public class Cloud : MonoBehaviour
         {
             speed = -2f;
         }
-        originalPos = transform.position;
     }
 
     void FixedUpdate()
     {
         transform.Translate(speed * Time.deltaTime, 0f, 0f);
-        if (transform.position.x < -20 || transform.position.x > 20)
+        if (transform.position.x < -30 || transform.position.x > 30)
         {
             ResetPosition();
         }
@@ -30,6 +28,8 @@ public class Cloud : MonoBehaviour
 
     private void ResetPosition()
     {
-        transform.position = originalPos;
+        Vector3 currentPos = transform.position;
+        currentPos.x = -currentPos.x;
+        transform.position = currentPos;
     }
 }

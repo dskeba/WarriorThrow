@@ -6,11 +6,12 @@ public class LevelGenerator : MonoBehaviour
 {
     [SerializeField]
     private GameObject firstBg;
-
     private GameObject platformPrefab;
     private GameObject platformWidePrefab;
     private GameObject bgPrefab;
     private GameObject cloudPrefab;
+    private GameObject cloud2Prefab;
+    private GameObject cloud3Prefab;
     private Vector3 lastPos;
     private Vector3 lastBgPos;
     private Vector3 firstBgPos;
@@ -28,6 +29,8 @@ public class LevelGenerator : MonoBehaviour
         platformWidePrefab = Resources.Load<GameObject>("Prefabs/PlatformWide");
         bgPrefab = Resources.Load<GameObject>("Prefabs/Background");
         cloudPrefab = Resources.Load<GameObject>("Prefabs/Cloud");
+        cloud2Prefab = Resources.Load<GameObject>("Prefabs/Cloud2");
+        cloud3Prefab = Resources.Load<GameObject>("Prefabs/Cloud3");
 
         for (int i = 0; i < 50; i++)
         {
@@ -82,16 +85,19 @@ public class LevelGenerator : MonoBehaviour
 
     void generateNextCloud()
     {
-        float nextX;
-        if (Random.value > 0.5f)
+        float nextX = Random.Range(-30, 30);
+        float nextY = lastBgPos.y;
+        Vector3 nextPos = new Vector3(nextX, nextY, 0);
+        float randomValue = Random.value;
+        if (randomValue > 0.66f)
         {
-            nextX = 20;
+            Instantiate(cloudPrefab, nextPos, Quaternion.identity);
+        } else if (Random.value > 0.33f)
+        {
+            Instantiate(cloud2Prefab, nextPos, Quaternion.identity);
         } else
         {
-            nextX = -20;
+            Instantiate(cloud3Prefab, nextPos, Quaternion.identity);
         }
-        float nextY = lastBgPos.y + bgHeight - 0.01f;
-        Vector3 nextPos = new Vector3(nextX, nextY, 0);
-        Instantiate(cloudPrefab, nextPos, Quaternion.identity);
     }
 }

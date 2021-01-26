@@ -9,14 +9,19 @@ public class PlayerMovement : MonoBehaviour
     private LineRenderer lr;
     private Rigidbody2D rb;
     private BoxCollider2D bc;
+    private LineRenderer trajectoryLine;
     [SerializeField]
     private LayerMask platformLayerMask;
+    private int numOfTrajectoryPoints = 15;
+    private float timeBetweenTrajectoryPoints = 0.05f;
 
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
+        trajectoryLine = transform.Find("Trajectory").GetComponent<LineRenderer>();
+        trajectoryLine.positionCount = numOfTrajectoryPoints;
     }
 
     private void Update()
@@ -45,6 +50,13 @@ public class PlayerMovement : MonoBehaviour
         positions[1] = new Vector3(endDragPos.x, endDragPos.y, -1);
         lr.enabled = true;
         lr.SetPositions(positions);
+        Vector3[] trajectoryPoints = new Vector3[numOfTrajectoryPoints];
+        for (int i = 0; i < numOfTrajectoryPoints; i++)
+        {
+            trajectoryPoints[i] = pointPosition(i * timeBetweenTrajectoryPoints, getForceVector());
+        }
+        trajectoryLine.enabled = true;
+        trajectoryLine.SetPositions(trajectoryPoints);
     }
 
     private void OnMouseUp()
@@ -53,9 +65,14 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        Vector2 forceVector = endDragPos - beginDragPos;
-        rb.AddForce(-forceVector * 3, ForceMode2D.Impulse);
+        rb.velocity = getForceVector();
         lr.enabled = false;
+        trajectoryLine.enabled = false;
+    }
+
+    private Vector2 getForceVector()
+    {
+        return (endDragPos - beginDragPos) * -3;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -76,7 +93,12 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded()
     {
         float extraHeight = 0.1f;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0f, Vector2.down, extraHeight, platformLayerMask);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size + new Vector3(1.2f, 1, 1), 0f, Vector2.down, extraHeight, platformLayerMask);
         return raycastHit.collider != null;
+    }
+
+    private Vector2 pointPosition(float time, Vector2 force)
+    {
+        return (Vector2)transform.position + (getForceVector() * time) + (Physics2D.gravity * (time * time) / 2);
     }
 }
