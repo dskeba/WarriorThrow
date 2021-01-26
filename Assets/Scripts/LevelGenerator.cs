@@ -8,6 +8,7 @@ public class LevelGenerator : MonoBehaviour
     private GameObject firstBg;
 
     private GameObject platformPrefab;
+    private GameObject platformWidePrefab;
     private GameObject bgPrefab;
     private GameObject cloudPrefab;
     private Vector3 lastPos;
@@ -24,6 +25,7 @@ public class LevelGenerator : MonoBehaviour
         lastBgPos = firstBg.transform.position;
 
         platformPrefab = Resources.Load<GameObject>("Prefabs/Platform");
+        platformWidePrefab = Resources.Load<GameObject>("Prefabs/PlatformWide");
         bgPrefab = Resources.Load<GameObject>("Prefabs/Background");
         cloudPrefab = Resources.Load<GameObject>("Prefabs/Cloud");
 
@@ -50,16 +52,22 @@ public class LevelGenerator : MonoBehaviour
         {
             if (Random.value > 0.5)
             {
-                nextX -= 1;
+                nextX -= 2;
             }
             else
             {
-                nextX += 1;
+                nextX += 2;
             }
         }
         float nextY = lastPos.y + Random.Range(3, 6);
         Vector3 nextPos = new Vector3(nextX, nextY, 0);
-        Instantiate(platformPrefab, nextPos, Quaternion.identity);
+        if (Random.value > 0.5)
+        {
+            Instantiate(platformPrefab, nextPos, Quaternion.identity);
+        } else
+        {
+            Instantiate(platformWidePrefab, nextPos, Quaternion.identity);
+        }
         lastPos = nextPos;
     }
 

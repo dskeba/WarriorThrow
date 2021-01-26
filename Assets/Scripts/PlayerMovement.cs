@@ -31,7 +31,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         beginDragPos = transform.position;
-        Debug.Log(beginDragPos);
     }
 
     private void OnMouseDrag()
