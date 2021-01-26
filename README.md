@@ -1,2 +1,2 @@
 # WarriorThrow
-Warrior Throw is a simple 2D game made in Unity and C#
+Warrior Throw is a simple physics based jumping game created in Unity and C#
