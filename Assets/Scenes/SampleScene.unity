@@ -167,7 +167,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7771429, y: 1}
+    m_SensorSize: {x: 1.7793595, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -526,7 +526,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 100
+  m_SortingOrder: 1
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 2, y: 2, z: 1}
@@ -548,11 +548,11 @@ LineRenderer:
       - serializedVersion: 3
         time: 1
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0.04577465
+        outSlope: -0.04577465
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.15384614
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
