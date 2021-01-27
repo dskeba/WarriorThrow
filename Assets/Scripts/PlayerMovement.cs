@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -22,11 +21,6 @@ public class PlayerMovement : MonoBehaviour
         bc = GetComponent<BoxCollider2D>();
         trajectoryLine = transform.Find("Trajectory").GetComponent<LineRenderer>();
         trajectoryLine.positionCount = numOfTrajectoryPoints;
-    }
-
-    private void Update()
-    {
-        isGrounded();
     }
 
     private void OnMouseDown()
@@ -80,6 +74,9 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.tag.Equals("Deathbox"))
         {
             ResetGame();
+        } else if (collision.gameObject.tag.Equals("Star"))
+        {
+            ResetGame();
         }
     }
 
@@ -92,8 +89,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGrounded()
     {
-        float extraHeight = 0.1f;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size + new Vector3(1.2f, 1, 1), 0f, Vector2.down, extraHeight, platformLayerMask);
+        float extraHeight = 0.05f;
+        RaycastHit2D raycastHit = Physics2D.BoxCast(bc.bounds.center, new Vector2(bc.bounds.extents.x * 2, bc.bounds.extents.y * 2), 0, Vector2.down, extraHeight, platformLayerMask);
         return raycastHit.collider != null;
     }
 
