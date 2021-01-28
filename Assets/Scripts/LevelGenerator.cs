@@ -1,14 +1,21 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
+    [SerializeField]
+    private int totalPlatforms;
+    [SerializeField]
+    private float widePlatformRatio;
+    [SerializeField]
+    private float spikedPlatformRatio;
+    [SerializeField]
+    private float icePlatformRatio;
+
     private GameObject backgroundColorPrefab;
-    private GameObject platformPrefab;
-    private GameObject platformSpikesPrefab;
-    private GameObject platformSpikesStarPrefab;
-    private GameObject platformWidePrefab;
-    private GameObject platformWideSpikesPrefab;
+    private Dictionary<string, GameObject> platformPrefabs;
+    private List<GameObject> instantiatedGameObjects;
     private GameObject bgPrefab;
     private GameObject cloudPrefab;
     private GameObject cloud2Prefab;
@@ -16,14 +23,21 @@ public class LevelGenerator : MonoBehaviour
     private Vector3 lastPlatformPos = new Vector3(0, 0, 0);
     private Vector3 lastBgPos = new Vector3(0, 0, 0);
     private float bgHeight;
-    [SerializeField]
-    private int totalPlatforms;
 
     private void Awake()
     {
         LoadPrefabs();
         CacheBgSize();
         GenerateBackgroundColor();
+        GenerateLevel(false);
+    }
+
+    public void GenerateLevel(bool destroyLevel)
+    {
+        if (destroyLevel)
+        {
+            DestoryLevel();
+        }
         GenerateFirstBg();
         GenerateFirstPlatform();
         for (int i = 0; i < totalPlatforms; i++)
@@ -32,14 +46,32 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+    private void DestoryLevel()
+    {
+        foreach(GameObject gameObject in instantiatedGameObjects)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void LoadPrefabs()
     {
+        instantiatedGameObjects = new List<GameObject>();
+
         backgroundColorPrefab = Resources.Load<GameObject>("Prefabs/BackgroundColor");
-        platformPrefab = Resources.Load<GameObject>("Prefabs/Platform");
-        platformSpikesPrefab = Resources.Load<GameObject>("Prefabs/PlatformSpikes");
-        platformSpikesStarPrefab = Resources.Load<GameObject>("Prefabs/PlatformSpikesStar");
-        platformWidePrefab = Resources.Load<GameObject>("Prefabs/PlatformWide");
-        platformWideSpikesPrefab = Resources.Load<GameObject>("Prefabs/PlatformWideSpikes");
+
+        platformPrefabs = new Dictionary<string, GameObject>();
+        platformPrefabs.Add("Prefabs/Platform", Resources.Load<GameObject>("Prefabs/Platform"));
+        platformPrefabs.Add("Prefabs/PlatformWide", Resources.Load<GameObject>("Prefabs/PlatformWide"));
+        platformPrefabs.Add("Prefabs/PlatformWideSpiked", Resources.Load<GameObject>("Prefabs/PlatformWideSpiked"));
+        platformPrefabs.Add("Prefabs/PlatformWideIce", Resources.Load<GameObject>("Prefabs/PlatformWideIce"));
+        platformPrefabs.Add("Prefabs/PlatformWideSpikedIce", Resources.Load<GameObject>("Prefabs/PlatformWideSpikedIce"));
+        platformPrefabs.Add("Prefabs/PlatformSpiked", Resources.Load<GameObject>("Prefabs/PlatformSpiked"));
+        platformPrefabs.Add("Prefabs/PlatformSpikedIce", Resources.Load<GameObject>("Prefabs/PlatformSpikedIce"));
+        platformPrefabs.Add("Prefabs/PlatformIce", Resources.Load<GameObject>("Prefabs/PlatformIce"));
+
+        platformPrefabs.Add("Prefabs/PlatformSpikedStar", Resources.Load<GameObject>("Prefabs/PlatformSpikedStar"));
+
         bgPrefab = Resources.Load<GameObject>("Prefabs/Background");
         cloudPrefab = Resources.Load<GameObject>("Prefabs/Cloud");
         cloud2Prefab = Resources.Load<GameObject>("Prefabs/Cloud2");
@@ -55,7 +87,7 @@ public class LevelGenerator : MonoBehaviour
     private void GenerateFirstPlatform()
     {
         Vector3 firstPlatformPos = new Vector3(0, 0, 0);
-        Instantiate(platformWidePrefab, firstPlatformPos, Quaternion.identity);
+        instantiatedGameObjects.Add(Instantiate(platformPrefabs["Prefabs/PlatformWide"], firstPlatformPos, Quaternion.identity));
         lastPlatformPos = firstPlatformPos;
     }
 
@@ -73,15 +105,15 @@ public class LevelGenerator : MonoBehaviour
 
     private void GenerateNext(bool lastPlatform)
     {
-        GenerateNextPlatform(lastPlatform);
+        instantiatedGameObjects.Add(GenerateNextPlatform(lastPlatform));
         if (lastPlatformPos.y >= lastBgPos.y)
         {
-            GenerateNextCloud();
-            GenerateNextBg();
+            instantiatedGameObjects.Add(GenerateNextCloud());
+            instantiatedGameObjects.Add(GenerateNextBg());
         }
     }
 
-    private void GenerateNextPlatform(bool lastPlatform)
+    private GameObject GenerateNextPlatform(bool lastPlatform)
     {
         float nextX = Random.Range(-5, 5);
         if (nextX == lastPlatformPos.x)
@@ -99,53 +131,40 @@ public class LevelGenerator : MonoBehaviour
         Vector3 nextPlatformPos = new Vector3(nextX, nextY, 0);
         if (lastPlatform)
         {
-            Instantiate(platformSpikesStarPrefab, nextPlatformPos, Quaternion.identity);
-            return;
-        }
-        if (Random.value > 0.5)
-        {
-            InstantiatePlatform(nextPlatformPos);
-        } else
-        {
-            InstantiateWidePlatform(nextPlatformPos);
+            return Instantiate(platformPrefabs["Prefabs/PlatformSpikedStar"], nextPlatformPos, Quaternion.identity);
         }
         lastPlatformPos = nextPlatformPos;
+        return InstantiatePlatform(nextPlatformPos);
     }
 
-    private void InstantiatePlatform(Vector3 nextPlatformPos)
+    private GameObject InstantiatePlatform(Vector3 nextPlatformPos)
     {
-        if (Random.value > 0.5)
+        string platformPrefab = "Prefabs/Platform";
+        if (Random.value <= widePlatformRatio)
         {
-            Instantiate(platformPrefab, nextPlatformPos, Quaternion.identity);
+            platformPrefab += "Wide";
         }
-        else
+        if (Random.value <= spikedPlatformRatio)
         {
-            Instantiate(platformSpikesPrefab, nextPlatformPos, Quaternion.identity);
+            platformPrefab += "Spiked";
         }
+        if (Random.value <= icePlatformRatio)
+        {
+            platformPrefab += "Ice";
+        }
+        return Instantiate(platformPrefabs[platformPrefab], nextPlatformPos, Quaternion.identity);
     }
 
-    private void InstantiateWidePlatform(Vector3 nextPlatformPos)
-    {
-        if (Random.value > 0.5)
-        {
-            Instantiate(platformWidePrefab, nextPlatformPos, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(platformWideSpikesPrefab, nextPlatformPos, Quaternion.identity);
-        }
-    }
-
-    private void GenerateNextBg()
+    private GameObject GenerateNextBg()
     {
         float nextX = lastBgPos.x;
-        float nextY = lastBgPos.y + bgHeight - 0.01f;
+        float nextY = lastBgPos.y + bgHeight;
         Vector3 nextPos = new Vector3(nextX, nextY, 0);
-        Instantiate(bgPrefab, nextPos, Quaternion.identity);
         lastBgPos = nextPos;
+        return Instantiate(bgPrefab, nextPos, Quaternion.identity);
     }
 
-    private void GenerateNextCloud()
+    private GameObject GenerateNextCloud()
     {
         float nextX = Random.Range(-30, 30);
         float nextY = lastBgPos.y;
@@ -153,13 +172,15 @@ public class LevelGenerator : MonoBehaviour
         float randomValue = Random.value;
         if (randomValue > 0.66f)
         {
-            Instantiate(cloudPrefab, nextPos, Quaternion.identity);
-        } else if (Random.value > 0.33f)
+            return Instantiate(cloudPrefab, nextPos, Quaternion.identity);
+        } 
+        else if (Random.value > 0.33f)
         {
-            Instantiate(cloud2Prefab, nextPos, Quaternion.identity);
-        } else
+            return Instantiate(cloud2Prefab, nextPos, Quaternion.identity);
+        } 
+        else
         {
-            Instantiate(cloud3Prefab, nextPos, Quaternion.identity);
+            return Instantiate(cloud3Prefab, nextPos, Quaternion.identity);
         }
     }
 }

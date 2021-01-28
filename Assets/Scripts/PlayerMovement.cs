@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private LineRenderer lr;
     private Rigidbody2D rb;
     private BoxCollider2D bc;
+    private LevelGenerator lg;
     private LineRenderer trajectoryLine;
     [SerializeField]
     private LayerMask platformLayerMask;
@@ -19,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
         lr = GetComponent<LineRenderer>();
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
+        lg = GameObject.Find("LevelGenerator").GetComponent<LevelGenerator>();
         trajectoryLine = transform.Find("Trajectory").GetComponent<LineRenderer>();
         trajectoryLine.positionCount = numOfTrajectoryPoints;
     }
@@ -73,15 +75,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Deathbox"))
         {
-            ResetGame();
+            ResetGame(false);
         } else if (collision.gameObject.tag.Equals("Star"))
         {
-            ResetGame();
+            ResetGame(true);
         }
     }
 
-    private void ResetGame()
+    private void ResetGame(bool regenerateLevel)
     {
+        lg.GenerateLevel(true);
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0;
         transform.position = new Vector3(0, 1, 0);
