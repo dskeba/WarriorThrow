@@ -37,7 +37,7 @@ public class LevelGenerator : MonoBehaviour
         if (destroyLevel)
         {
             DestoryLevel();
-        }
+        } 
         GenerateFirstBg();
         GenerateFirstPlatform();
         for (int i = 0; i < totalPlatforms; i++)
@@ -94,7 +94,7 @@ public class LevelGenerator : MonoBehaviour
     private void GenerateFirstBg()
     {
         Vector3 firstBgPos = new Vector3(0, 0, 0);
-        Instantiate(bgPrefab, firstBgPos, Quaternion.identity);
+        instantiatedGameObjects.Add(Instantiate(bgPrefab, firstBgPos, Quaternion.identity));
         lastBgPos = firstBgPos;
     }
 

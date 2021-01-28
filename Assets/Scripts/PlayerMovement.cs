@@ -84,7 +84,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void ResetGame(bool regenerateLevel)
     {
-        lg.GenerateLevel(true);
+        if (regenerateLevel)
+        {
+            lg.GenerateLevel(true);
+        }
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0;
         transform.position = new Vector3(0, 1, 0);
