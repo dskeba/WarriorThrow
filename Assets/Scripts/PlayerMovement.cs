@@ -14,15 +14,24 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask platformLayerMask;
     private int numOfTrajectoryPoints = 15;
     private float timeBetweenTrajectoryPoints = 0.05f;
+    private UIHeight heightText;
+    private UITimer timeText;
 
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
+        heightText = GameObject.Find("HeightText").GetComponent<UIHeight>();
+        timeText = GameObject.Find("TimeText").GetComponent<UITimer>();
         lg = GameObject.Find("LevelGenerator").GetComponent<LevelGenerator>();
         trajectoryLine = transform.Find("Trajectory").GetComponent<LineRenderer>();
         trajectoryLine.positionCount = numOfTrajectoryPoints;
+    }
+
+    private void FixedUpdate()
+    {
+        heightText.UpdateHeight((int)transform.position.y);
     }
 
     private void OnMouseDown()
@@ -57,13 +66,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnMouseUp()
     {
+        lr.enabled = false;
+        trajectoryLine.enabled = false;
         if (!isGrounded())
         {
             return;
         }
         rb.velocity = getForceVector();
-        lr.enabled = false;
-        trajectoryLine.enabled = false;
     }
 
     private Vector2 getForceVector()
@@ -86,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (regenerateLevel)
         {
+            timeText.ResetTime();
             lg.GenerateLevel(true);
         }
         rb.velocity = Vector2.zero;
@@ -95,9 +105,21 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGrounded()
     {
-        float extra = 0.05f;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(bc.bounds.center, new Vector2((bc.bounds.extents.x * 2) + extra, bc.bounds.extents.y * 2), 0, Vector2.down, extra, platformLayerMask);
-        return raycastHit.collider != null;
+        float threshhold = 0.01f;
+
+        // Downward boxcast at bottom of players feet
+        Vector2 boxcastCenter = new Vector2(bc.bounds.center.x, bc.bounds.center.y - bc.bounds.extents.y);
+        Vector2 boxcastSize = new Vector2(bc.bounds.extents.x * 2, threshhold);
+        RaycastHit2D boxcastHit = Physics2D.BoxCast(boxcastCenter, boxcastSize, 0, Vector2.down, 0, platformLayerMask);
+
+        // Left and right raycast to check if touching a platform immediately to left or right sides
+        Vector3 bottomLeft = new Vector2(bc.bounds.center.x - bc.bounds.extents.x, bc.bounds.center.y - bc.bounds.extents.y + 0.01f);
+        RaycastHit2D linecastHitLeft = Physics2D.Raycast(bottomLeft, Vector2.left, threshhold, platformLayerMask);
+        Vector3 bottomRight = new Vector2(bc.bounds.center.x + bc.bounds.extents.x, bc.bounds.center.y - bc.bounds.extents.y + 0.01f);
+        RaycastHit2D linecastHitRight = Physics2D.Raycast(bottomRight, Vector2.right, threshhold, platformLayerMask);
+
+        // Only grounded if boxcast downward is touching and sides are not touching
+        return (boxcastHit.collider && !(linecastHitLeft.collider || linecastHitRight.collider));
     }
 
     private Vector2 pointPosition(float time, Vector2 force)
