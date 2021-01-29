@@ -1398,10 +1398,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605abaefa3f6fd948ac320907e292bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalPlatforms: 4
-  widePlatformRatio: 0.5
+  totalPlatforms: 25
+  widePlatformRatio: 0.25
   spikedPlatformRatio: 0.5
-  icePlatformRatio: 0.5
+  icePlatformRatio: 0.25
 --- !u!4 &1983163963
 Transform:
   m_ObjectHideFlags: 0
