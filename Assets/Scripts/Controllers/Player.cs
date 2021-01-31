@@ -5,98 +5,91 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private LineRenderer lr;
+    private LineRenderer _lr;
     [SerializeField]
-    private Rigidbody2D rb;
+    private Rigidbody2D _rb;
     [SerializeField]
-    private BoxCollider2D bc;
+    private BoxCollider2D _bc;
     [SerializeField]
-    private LevelGenerator lg;
+    private SpriteRenderer _sr;
     [SerializeField]
-    private SpriteRenderer sr;
+    private Sprite _idleSprite;
     [SerializeField]
-    private Sprite idleSprite;
+    private Sprite _deadSprite;
     [SerializeField]
-    private Sprite deadSprite;
+    private LineRenderer _trajectoryLr;
     [SerializeField]
-    private LineRenderer trajectoryLine;
+    private LayerMask _platrformLayerMask;
     [SerializeField]
-    private LayerMask platformLayerMask;
+    private AudioSource _throwSound;
     [SerializeField]
-    private UIHeight heightText;
+    private AudioSource _deathSound;
     [SerializeField]
-    private UITimer timeText;
+    private AudioSource _finishSound;
     [SerializeField]
-    private UIStage stageText;
-    [SerializeField]
-    private AudioSource throwSound;
-    [SerializeField]
-    private AudioSource deathSound;
-    [SerializeField]
-    private AudioSource finishSound;
+    private LevelSystem _levelSystem;
 
-    private int numOfTrajectoryPoints = 15;
-    private float timeBetweenTrajectoryPoints = 0.05f;
-    private Vector2 beginDragPos;
-    private Vector2 endDragPos;
-    private bool isDead = false;
+    private int _numOfTrajectoryPoints = 15;
+    private float _timeBetweenTrajectoryPoints = 0.05f;
+    private Vector2 _beginDragPos;
+    private Vector2 _endDragPos;
+    private bool _isDead = false;
 
     private void Awake()
     {
-        trajectoryLine = transform.Find("Trajectory").GetComponent<LineRenderer>();
-        trajectoryLine.positionCount = numOfTrajectoryPoints;
+        _trajectoryLr.positionCount = _numOfTrajectoryPoints;
     }
 
     private void FixedUpdate()
     {
-        heightText.UpdateHeight((int)transform.position.y);
+        _levelSystem.UpdatePlayerHeight(transform.position.y);
     }
 
     private void OnMouseDown()
     {
-        if (!isGrounded() || isDead)
+        if (!isGrounded() || _isDead)
         {
             return;
         }
-        beginDragPos = transform.position;
+        _beginDragPos = transform.position;
     }
 
     private void OnMouseDrag()
     {
-        if (!isGrounded() || isDead)
+        if (!isGrounded() || _isDead)
         {
             return;
         }
-        endDragPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _endDragPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3[] positions = new Vector3[2];
-        positions[0] = new Vector3(beginDragPos.x, beginDragPos.y, -1);
-        positions[1] = new Vector3(endDragPos.x, endDragPos.y, -1);
-        lr.enabled = true;
-        lr.SetPositions(positions);
-        Vector3[] trajectoryPoints = new Vector3[numOfTrajectoryPoints];
-        for (int i = 0; i < numOfTrajectoryPoints; i++)
+        positions[0] = new Vector3(_beginDragPos.x, _beginDragPos.y, -1);
+        positions[1] = new Vector3(_endDragPos.x, _endDragPos.y, -1);
+        _lr.enabled = true;
+        _lr.SetPositions(positions);
+        Vector3[] trajectoryPoints = new Vector3[_numOfTrajectoryPoints];
+        for (int i = 0; i < _numOfTrajectoryPoints; i++)
         {
-            trajectoryPoints[i] = pointPosition(i * timeBetweenTrajectoryPoints, getForceVector());
+            trajectoryPoints[i] = pointPosition(i * _timeBetweenTrajectoryPoints, getForceVector());
         }
-        trajectoryLine.enabled = true;
-        trajectoryLine.SetPositions(trajectoryPoints);
+        _trajectoryLr.enabled = true;
+        _trajectoryLr.SetPositions(trajectoryPoints);
     }
 
     private void OnMouseUp()
     {
-        lr.enabled = false;
-        trajectoryLine.enabled = false;
-        if (!isGrounded() || isDead)
+        _lr.enabled = false;
+        _trajectoryLr.enabled = false;
+        if (!isGrounded() || _isDead)
         {
             return;
         }
-        throwSound.Play();
-        rb.velocity = getForceVector();
+        _throwSound.Play();
+        _rb.velocity = getForceVector();
     }
 
     private Vector2 getForceVector()
     {
-        return (endDragPos - beginDragPos) * -3;
+        return (_endDragPos - _beginDragPos) * -3;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -111,47 +104,38 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void ResetGame(bool regenerateLevel)
+    public void ResetPlayer()
     {
-        if (regenerateLevel)
-        {
-            timeText.ResetTime();
-            lg.GenerateLevel(true);
-        }
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0;
+        _isDead = false;
+        _rb.velocity = Vector2.zero;
+        _rb.angularVelocity = 0;
+        _sr.sprite = _idleSprite;
+        _sr.color = Color.white;
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         transform.position = new Vector3(0, 1, 0);
     }
 
     private IEnumerator Finish()
     {
-        finishSound.Play();
-        sr.color = new Color(1, 0.8f, 0);
+        _finishSound.Play();
+        _sr.color = new Color(1, 0.8f, 0);
         yield return new WaitForSeconds(1f);
-        sr.color = Color.white;
-        sr.sprite = idleSprite;
-        isDead = false;
-        stageText.IncrementStage();
-        ResetGame(true);
+        _levelSystem.GenerateNextLevel();
     }
 
     private IEnumerator Death()
     {
-        if (isDead)
+        if (_isDead)
         {
             yield break;
         }
-        deathSound.Play();
-        isDead = true;
+        _deathSound.Play();
+        _isDead = true;
         transform.rotation = Quaternion.Euler(0f, 0f, 90f);
-        sr.color = new Color(1, 0.5f, 0.5f);
-        sr.sprite = deadSprite;
+        _sr.color = new Color(1, 0.5f, 0.5f);
+        _sr.sprite = _deadSprite;
         yield return new WaitForSeconds(1f);
-        sr.color = Color.white;
-        sr.sprite = idleSprite;
-        isDead = false;
-        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        ResetGame(false);
+        _levelSystem.ResetCurrentLevel();
 
     }
 
@@ -160,15 +144,15 @@ public class Player : MonoBehaviour
         float threshhold = 0.01f;
 
         // Downward boxcast at bottom of players feet
-        Vector2 boxcastCenter = new Vector2(bc.bounds.center.x, bc.bounds.center.y - bc.bounds.extents.y);
-        Vector2 boxcastSize = new Vector2(bc.bounds.extents.x * 2, threshhold);
-        RaycastHit2D boxcastHit = Physics2D.BoxCast(boxcastCenter, boxcastSize, 0, Vector2.down, 0, platformLayerMask);
+        Vector2 boxcastCenter = new Vector2(_bc.bounds.center.x, _bc.bounds.center.y - _bc.bounds.extents.y);
+        Vector2 boxcastSize = new Vector2(_bc.bounds.extents.x * 2, threshhold);
+        RaycastHit2D boxcastHit = Physics2D.BoxCast(boxcastCenter, boxcastSize, 0, Vector2.down, 0, _platrformLayerMask);
 
         // Left and right raycast to check if touching a platform immediately to left or right sides
-        Vector3 bottomLeft = new Vector2(bc.bounds.center.x - bc.bounds.extents.x, bc.bounds.center.y - bc.bounds.extents.y + 0.01f);
-        RaycastHit2D linecastHitLeft = Physics2D.Raycast(bottomLeft, Vector2.left, threshhold, platformLayerMask);
-        Vector3 bottomRight = new Vector2(bc.bounds.center.x + bc.bounds.extents.x, bc.bounds.center.y - bc.bounds.extents.y + 0.01f);
-        RaycastHit2D linecastHitRight = Physics2D.Raycast(bottomRight, Vector2.right, threshhold, platformLayerMask);
+        Vector3 bottomLeft = new Vector2(_bc.bounds.center.x - _bc.bounds.extents.x, _bc.bounds.center.y - _bc.bounds.extents.y + 0.01f);
+        RaycastHit2D linecastHitLeft = Physics2D.Raycast(bottomLeft, Vector2.left, threshhold, _platrformLayerMask);
+        Vector3 bottomRight = new Vector2(_bc.bounds.center.x + _bc.bounds.extents.x, _bc.bounds.center.y - _bc.bounds.extents.y + 0.01f);
+        RaycastHit2D linecastHitRight = Physics2D.Raycast(bottomRight, Vector2.right, threshhold, _platrformLayerMask);
 
         // Only grounded if boxcast downward is touching and sides are not touching
         return (boxcastHit.collider && !(linecastHitLeft.collider || linecastHitRight.collider));

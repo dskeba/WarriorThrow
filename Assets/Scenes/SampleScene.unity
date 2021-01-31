@@ -249,6 +249,54 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!1 &449752764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 449752765}
+  - component: {fileID: 449752766}
+  m_Layer: 0
+  m_Name: LevelSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &449752765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449752764}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.67758745, y: 0.83302444, z: -416.16113}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &449752766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449752764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d1d4ce4fe5ed424695ae085fb988733, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 884659706}
+  _heightText: {fileID: 1091437747}
+  _timeText: {fileID: 2044821973}
+  _stageText: {fileID: 2145755168}
+  _levelGenerator: {fileID: 1983163962}
 --- !u!1 &498433238
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +360,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498433238}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.4999998, z: -12}
+  m_LocalPosition: {x: 0, y: 1, z: -12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1038227616}
@@ -438,72 +486,6 @@ Transform:
   m_Father: {fileID: 498433240}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &632885726
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 632885729}
-  - component: {fileID: 632885728}
-  - component: {fileID: 632885727}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &632885727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 632885726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
---- !u!114 &632885728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 632885726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!4 &632885729
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 632885726}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &884659702
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,11 +500,11 @@ GameObject:
   - component: {fileID: 884659707}
   - component: {fileID: 884659706}
   - component: {fileID: 884659708}
-  - component: {fileID: 884659709}
   - component: {fileID: 884659710}
+  - component: {fileID: 884659709}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -602,23 +584,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c15eb31661de14dab697ca7ab75875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lr: {fileID: 884659707}
-  rb: {fileID: 884659705}
-  bc: {fileID: 884659704}
-  lg: {fileID: 1983163962}
-  sr: {fileID: 1594597001}
-  idleSprite: {fileID: 21300000, guid: d34d286fa63946c4b85746d358161e31, type: 3}
-  deadSprite: {fileID: 21300000, guid: 53a6ebd3a022c6a41a468abc4576cf96, type: 3}
-  trajectoryLine: {fileID: 193397780}
-  platformLayerMask:
+  _lr: {fileID: 884659707}
+  _rb: {fileID: 884659705}
+  _bc: {fileID: 884659704}
+  _sr: {fileID: 1594597001}
+  _idleSprite: {fileID: 21300000, guid: d34d286fa63946c4b85746d358161e31, type: 3}
+  _deadSprite: {fileID: 21300000, guid: 53a6ebd3a022c6a41a468abc4576cf96, type: 3}
+  _trajectoryLr: {fileID: 193397780}
+  _platrformLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  heightText: {fileID: 1091437747}
-  timeText: {fileID: 2044821973}
-  stageText: {fileID: 2145755168}
-  throwSound: {fileID: 884659708}
-  deathSound: {fileID: 884659709}
-  finishSound: {fileID: 884659710}
+  _throwSound: {fileID: 884659708}
+  _deathSound: {fileID: 884659709}
+  _finishSound: {fileID: 884659710}
+  _levelSystem: {fileID: 449752766}
 --- !u!120 &884659707
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -929,7 +908,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 4a51a4afd98d503499e69200de143e0b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.1
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1123,7 +1102,7 @@ MonoBehaviour:
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
-  m_ScreenY: 0.65
+  m_ScreenY: 0.5
   m_CameraDistance: 10
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
@@ -1684,7 +1663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605abaefa3f6fd948ac320907e292bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalPlatforms: 20
+  totalPlatforms: 4
   widePlatformRatio: 0.5
   spikedPlatformRatio: 0.5
   icePlatformRatio: 0.5
