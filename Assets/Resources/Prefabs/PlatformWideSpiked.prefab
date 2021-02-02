@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 7450685084033246258}
   - component: {fileID: 7450685084033246257}
   - component: {fileID: 7450685084033246256}
+  - component: {fileID: 8966053593338579835}
   m_Layer: 0
   m_Name: Spikes
   m_TagString: Deathbox
@@ -218,6 +219,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.5270183, y: 1.189395}
   m_EdgeRadius: 0
+--- !u!114 &8966053593338579835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7450685084033246259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 040dd8fd64ddaff49af509aa8d87e5e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7450685084585855689
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,6 +242,7 @@ GameObject:
   - component: {fileID: 7450685084585855688}
   - component: {fileID: 7450685084585855695}
   - component: {fileID: 7450685084585855694}
+  - component: {fileID: 2096953590416442087}
   m_Layer: 0
   m_Name: Spikes
   m_TagString: Deathbox
@@ -326,3 +340,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.5270183, y: 1.1893959}
   m_EdgeRadius: 0
+--- !u!114 &2096953590416442087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7450685084585855689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 040dd8fd64ddaff49af509aa8d87e5e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

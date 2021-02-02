@@ -25,8 +25,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioSource _deathSound;
     [SerializeField]
-    private AudioSource _finishSound;
-    [SerializeField]
     private LevelSystem _levelSystem;
 
     private int _numOfTrajectoryPoints = 15;
@@ -92,18 +90,6 @@ public class Player : MonoBehaviour
         return (_endDragPos - _beginDragPos) * -3;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag.Equals("Deathbox"))
-        {
-            StartCoroutine(Death());
-        } else if (collision.gameObject.tag.Equals("Star"))
-        {
-            collision.gameObject.SetActive(false);
-            StartCoroutine(Finish());
-        }
-    }
-
     public void ResetPlayer()
     {
         _isDead = false;
@@ -115,28 +101,22 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 1, 0);
     }
 
-    private IEnumerator Finish()
+    public void CompleteLevel()
     {
-        _finishSound.Play();
         _sr.color = new Color(1, 0.8f, 0);
-        yield return new WaitForSeconds(1f);
-        _levelSystem.GenerateNextLevel();
     }
 
-    private IEnumerator Death()
+    public void Die()
     {
         if (_isDead)
         {
-            yield break;
+            return;
         }
-        _deathSound.Play();
         _isDead = true;
+        _deathSound.Play();
         transform.rotation = Quaternion.Euler(0f, 0f, 90f);
         _sr.color = new Color(1, 0.5f, 0.5f);
         _sr.sprite = _deadSprite;
-        yield return new WaitForSeconds(1f);
-        _levelSystem.ResetCurrentLevel();
-
     }
 
     private bool isGrounded()

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Deathbox
   - Star
+  - LevelSystem
   layers:
   - Default
   - TransparentFX

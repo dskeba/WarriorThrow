@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 6132706918935815228}
   - component: {fileID: 6132706918935815231}
   - component: {fileID: 6132706918935815230}
+  - component: {fileID: 2600650595117579271}
   m_Layer: 0
   m_Name: Spikes
   m_TagString: Deathbox
@@ -218,6 +219,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.2317722, y: 1.189395}
   m_EdgeRadius: 0
+--- !u!114 &2600650595117579271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6132706918935815229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 040dd8fd64ddaff49af509aa8d87e5e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8506491870011275804
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,6 +242,7 @@ GameObject:
   - component: {fileID: 8506491870011275794}
   - component: {fileID: 8506491870011275805}
   - component: {fileID: 8506491870011275795}
+  - component: {fileID: 893819459498236180}
   m_Layer: 0
   m_Name: Star
   m_TagString: Star
@@ -326,3 +340,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.61, y: 1.53}
   m_EdgeRadius: 0
+--- !u!114 &893819459498236180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8506491870011275804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47918abbd07010d4587a6af2d2568d6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
