@@ -5,7 +5,7 @@ using UnityEngine;
 public class UIHeight : MonoBehaviour
 {
     private TextMeshProUGUI heightText;
-    private GameObject star;
+    private GameObject finalPlatform;
 
     void Awake()
     {
@@ -14,16 +14,16 @@ public class UIHeight : MonoBehaviour
 
     public void UpdateHeight(int currentHeight)
     {
-        heightText.text = currentHeight.ToString() + "m / " + GetStarHeight() + "m";
+        heightText.text = currentHeight.ToString() + "m / " + GetFinalPlatformHeight() + "m";
     }
 
-    private int GetStarHeight()
+    private int GetFinalPlatformHeight()
     {
-        if (star == null)
+        if (finalPlatform == null)
         {
-            star = GameObject.FindGameObjectWithTag("Star");
+            finalPlatform = GameObject.FindGameObjectWithTag("FinalPlatform");
         }
-        return (int)star.transform.position.y;
+        return (int)finalPlatform.transform.position.y;
     }
 
 }

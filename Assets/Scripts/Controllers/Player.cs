@@ -1,5 +1,6 @@
 ﻿
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -27,15 +28,16 @@ public class Player : MonoBehaviour
     [SerializeField]
     private LevelSystem _levelSystem;
 
-    private int _numOfTrajectoryPoints = 15;
+    private int _startingNumOfTrajectoryPoints = 15;
     private float _timeBetweenTrajectoryPoints = 0.05f;
     private Vector2 _beginDragPos;
     private Vector2 _endDragPos;
     private bool _isDead = false;
+    private List<LevelItem> _items = new List<LevelItem>();
 
     private void Awake()
     {
-        _trajectoryLr.positionCount = _numOfTrajectoryPoints;
+        _trajectoryLr.positionCount = _startingNumOfTrajectoryPoints;
     }
 
     private void FixedUpdate()
@@ -64,8 +66,8 @@ public class Player : MonoBehaviour
         positions[1] = new Vector3(_endDragPos.x, _endDragPos.y, -1);
         _lr.enabled = true;
         _lr.SetPositions(positions);
-        Vector3[] trajectoryPoints = new Vector3[_numOfTrajectoryPoints];
-        for (int i = 0; i < _numOfTrajectoryPoints; i++)
+        Vector3[] trajectoryPoints = new Vector3[_trajectoryLr.positionCount];
+        for (int i = 0; i < _trajectoryLr.positionCount; i++)
         {
             trajectoryPoints[i] = pointPosition(i * _timeBetweenTrajectoryPoints, getForceVector());
         }
@@ -101,9 +103,17 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 1, 0);
     }
 
-    public void CompleteLevel()
+    public void CompleteLevel(LevelItem item)
     {
         _sr.color = new Color(1, 0.8f, 0);
+        _items.Add(item);
+        if (item.Equals(LevelItem.FARSIGHT_HELMET)) {
+            _trajectoryLr.positionCount = 30;
+            Color startColor = new Color(1f, 0.9f, 0.1f, 1f);
+            Color endColor = new Color(1f, 0.9f, 0.1f, 0f);
+            _trajectoryLr.startColor = startColor;
+            _trajectoryLr.endColor = endColor;
+        }
     }
 
     public void Die()

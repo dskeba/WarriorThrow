@@ -23,17 +23,19 @@ public class LevelGenerator : MonoBehaviour
     private Vector3 lastPlatformPos = new Vector3(0, 0, 0);
     private Vector3 lastBgPos = new Vector3(0, 0, 0);
     private float bgHeight;
+    private LevelItem _levelItem;
 
     private void Awake()
     {
         LoadPrefabs();
         CacheBgSize();
         GenerateBackgroundColor();
-        GenerateLevel(false);
+        GenerateLevel(false, LevelItem.FARSIGHT_HELMET);
     }
 
-    public void GenerateLevel(bool destroyLevel)
+    public void GenerateLevel(bool destroyLevel, LevelItem item)
     {
+        _levelItem = item;
         if (destroyLevel)
         {
             DestoryLevel();
@@ -71,6 +73,7 @@ public class LevelGenerator : MonoBehaviour
         platformPrefabs.Add("Prefabs/PlatformIce", Resources.Load<GameObject>("Prefabs/PlatformIce"));
 
         platformPrefabs.Add("Prefabs/PlatformSpikedStar", Resources.Load<GameObject>("Prefabs/PlatformSpikedStar"));
+        platformPrefabs.Add("Prefabs/PlatformSpikedFarsightHelmet", Resources.Load<GameObject>("Prefabs/PlatformSpikedFarsightHelmet"));
 
         bgPrefab = Resources.Load<GameObject>("Prefabs/Background");
         cloudPrefab = Resources.Load<GameObject>("Prefabs/Cloud");
@@ -131,7 +134,14 @@ public class LevelGenerator : MonoBehaviour
         Vector3 nextPlatformPos = new Vector3(nextX, nextY, 0);
         if (lastPlatform)
         {
-            return Instantiate(platformPrefabs["Prefabs/PlatformSpikedStar"], nextPlatformPos, Quaternion.identity);
+            if (_levelItem.Equals(LevelItem.FARSIGHT_HELMET))
+            {
+                return Instantiate(platformPrefabs["Prefabs/PlatformSpikedFarsightHelmet"], nextPlatformPos, Quaternion.identity);
+            }
+            else if (_levelItem.Equals(LevelItem.STAR))
+            {
+                return Instantiate(platformPrefabs["Prefabs/PlatformSpikedStar"], nextPlatformPos, Quaternion.identity);
+            }
         }
         lastPlatformPos = nextPlatformPos;
         return InstantiatePlatform(nextPlatformPos);

@@ -16,7 +16,7 @@ public class Star : MonoBehaviour
         if (collision.gameObject.tag.Equals("Player"))
         {
             gameObject.SetActive(false);
-            _levelSystem.CompleteLevel();
+            _levelSystem.CompleteLevel(LevelItem.STAR);
         }
     }
 }

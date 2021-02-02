@@ -2,8 +2,15 @@
 using System.Collections;
 using UnityEngine;
 
+public enum LevelItem
+{
+    STAR,
+    FARSIGHT_HELMET
+}
+
 class LevelSystem : MonoBehaviour
 {
+
     [SerializeField]
     private Player _player;
     [SerializeField]
@@ -17,19 +24,19 @@ class LevelSystem : MonoBehaviour
     [SerializeField]
     private LevelGenerator _levelGenerator;
 
-    public void CompleteLevel()
+    public void CompleteLevel(LevelItem item)
     {
-        StartCoroutine(CompleteLevelWithDelay(1f));
+        StartCoroutine(CompleteLevelCoroutine(item));
     }
 
-    public IEnumerator CompleteLevelWithDelay(float seconds)
+    public IEnumerator CompleteLevelCoroutine(LevelItem item)
     {
         _finishSound.Play();
-        _player.CompleteLevel();
-        yield return new WaitForSeconds(seconds);
+        _player.CompleteLevel(item);
+        yield return new WaitForSeconds(1f);
         _timeText.ResetTime();
         _stageText.IncrementStage();
-        _levelGenerator.GenerateLevel(true);
+        _levelGenerator.GenerateLevel(true, LevelItem.STAR);
         _player.ResetPlayer();
     }
 
