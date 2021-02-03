@@ -441,7 +441,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.5515548, y: 1}
+    m_SensorSize: {x: 1.6073395, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -597,6 +597,7 @@ GameObject:
   - component: {fileID: 884659704}
   - component: {fileID: 884659707}
   - component: {fileID: 884659706}
+  - component: {fileID: 884659711}
   - component: {fileID: 884659708}
   - component: {fileID: 884659710}
   - component: {fileID: 884659709}
@@ -682,19 +683,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c15eb31661de14dab697ca7ab75875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lr: {fileID: 884659707}
   _rb: {fileID: 884659705}
-  _bc: {fileID: 884659704}
   _sr: {fileID: 1594597001}
   _idleSprite: {fileID: 21300000, guid: d34d286fa63946c4b85746d358161e31, type: 3}
   _deadSprite: {fileID: 21300000, guid: 53a6ebd3a022c6a41a468abc4576cf96, type: 3}
   _trajectoryLr: {fileID: 193397780}
-  _platrformLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  _throwSound: {fileID: 884659708}
   _deathSound: {fileID: 884659709}
   _levelSystem: {fileID: 449752766}
+  IsDead: 0
 --- !u!120 &884659707
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1089,6 +1085,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &884659711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 884659702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b64abf3f3ca00b64aa524ec2e91ceeb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 884659706}
+  _slingLr: {fileID: 884659707}
+  _trajectoryLr: {fileID: 193397780}
+  _rb: {fileID: 884659705}
+  _bc: {fileID: 884659704}
+  _platrformLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _throwSound: {fileID: 884659708}
 --- !u!1 &893827223
 GameObject:
   m_ObjectHideFlags: 0
@@ -1799,7 +1816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605abaefa3f6fd948ac320907e292bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalPlatforms: 4
+  totalPlatforms: 1
   widePlatformRatio: 0.5
   spikedPlatformRatio: 0.5
   icePlatformRatio: 0.5
