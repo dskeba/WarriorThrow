@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     {
         _sr.color = new Color(1, 0.8f, 0);
         _items.Add(item);
-        if (item.Equals(LevelItem.FARSIGHT_HELMET)) {
+        if (item.Equals(LevelItem.HELMET_OF_FARSIGHT)) {
             _trajectoryLr.positionCount = 30;
             Color startColor = new Color(1f, 0.9f, 0.1f, 1f);
             Color endColor = new Color(1f, 0.9f, 0.1f, 0f);

@@ -15,6 +15,7 @@ public class LevelGenerator : MonoBehaviour
 
     private GameObject backgroundColorPrefab;
     private Dictionary<string, GameObject> platformPrefabs;
+    private Dictionary<LevelItem, GameObject> itemPrefabs;
     private List<GameObject> instantiatedGameObjects;
     private GameObject bgPrefab;
     private GameObject cloudPrefab;
@@ -25,12 +26,13 @@ public class LevelGenerator : MonoBehaviour
     private float bgHeight;
     private LevelItem _levelItem;
 
+    public float TotalHeight;
+
     private void Awake()
     {
         LoadPrefabs();
         CacheBgSize();
         GenerateBackgroundColor();
-        GenerateLevel(false, LevelItem.FARSIGHT_HELMET);
     }
 
     public void GenerateLevel(bool destroyLevel, LevelItem item)
@@ -72,8 +74,9 @@ public class LevelGenerator : MonoBehaviour
         platformPrefabs.Add("Prefabs/PlatformSpikedIce", Resources.Load<GameObject>("Prefabs/PlatformSpikedIce"));
         platformPrefabs.Add("Prefabs/PlatformIce", Resources.Load<GameObject>("Prefabs/PlatformIce"));
 
-        platformPrefabs.Add("Prefabs/PlatformSpikedStar", Resources.Load<GameObject>("Prefabs/PlatformSpikedStar"));
-        platformPrefabs.Add("Prefabs/PlatformSpikedFarsightHelmet", Resources.Load<GameObject>("Prefabs/PlatformSpikedFarsightHelmet"));
+        itemPrefabs = new Dictionary<LevelItem, GameObject>();
+        itemPrefabs.Add(LevelItem.BOOTS_OF_FRICTION, Resources.Load<GameObject>("Prefabs/BootsOfFriction"));
+        itemPrefabs.Add(LevelItem.HELMET_OF_FARSIGHT, Resources.Load<GameObject>("Prefabs/HelmetOfFarsight"));
 
         bgPrefab = Resources.Load<GameObject>("Prefabs/Background");
         cloudPrefab = Resources.Load<GameObject>("Prefabs/Cloud");
@@ -134,14 +137,11 @@ public class LevelGenerator : MonoBehaviour
         Vector3 nextPlatformPos = new Vector3(nextX, nextY, 0);
         if (lastPlatform)
         {
-            if (_levelItem.Equals(LevelItem.FARSIGHT_HELMET))
-            {
-                return Instantiate(platformPrefabs["Prefabs/PlatformSpikedFarsightHelmet"], nextPlatformPos, Quaternion.identity);
-            }
-            else if (_levelItem.Equals(LevelItem.STAR))
-            {
-                return Instantiate(platformPrefabs["Prefabs/PlatformSpikedStar"], nextPlatformPos, Quaternion.identity);
-            }
+            GameObject platform = Instantiate(platformPrefabs["Prefabs/Platform"], nextPlatformPos, Quaternion.identity);
+            Vector3 itemPos = nextPlatformPos + new Vector3(0f, 2f, 0f);
+            Instantiate(itemPrefabs[_levelItem], itemPos, Quaternion.identity);
+            TotalHeight = itemPos.y;
+            return platform;
         }
         lastPlatformPos = nextPlatformPos;
         return InstantiatePlatform(nextPlatformPos);

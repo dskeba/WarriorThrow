@@ -12,18 +12,8 @@ public class UIHeight : MonoBehaviour
         heightText = GetComponent<TextMeshProUGUI>();
     }
 
-    public void UpdateHeight(int currentHeight)
+    public void UpdateHeight(int currentHeight, int totalHeight)
     {
-        heightText.text = currentHeight.ToString() + "m / " + GetFinalPlatformHeight() + "m";
+        heightText.text = currentHeight.ToString() + "m / " + totalHeight.ToString() + "m";
     }
-
-    private int GetFinalPlatformHeight()
-    {
-        if (finalPlatform == null)
-        {
-            finalPlatform = GameObject.FindGameObjectWithTag("FinalPlatform");
-        }
-        return (int)finalPlatform.transform.position.y;
-    }
-
 }

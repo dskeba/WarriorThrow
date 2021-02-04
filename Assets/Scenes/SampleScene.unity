@@ -1816,7 +1816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605abaefa3f6fd948ac320907e292bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalPlatforms: 1
+  totalPlatforms: 3
   widePlatformRatio: 0.5
   spikedPlatformRatio: 0.5
   icePlatformRatio: 0.5

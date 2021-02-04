@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum LevelItem
 {
-    STAR,
-    FARSIGHT_HELMET
+    HELMET_OF_FARSIGHT,
+    BOOTS_OF_FRICTION
 }
 
 class LevelSystem : MonoBehaviour
@@ -24,6 +24,16 @@ class LevelSystem : MonoBehaviour
     [SerializeField]
     private LevelGenerator _levelGenerator;
 
+    private void Start()
+    {
+        _levelGenerator.GenerateLevel(false, RandomLevelItem());
+    }
+
+    private LevelItem RandomLevelItem()
+    {
+        return (LevelItem)Random.Range(0, 2);
+    }
+
     public void CompleteLevel(LevelItem item)
     {
         StartCoroutine(CompleteLevelCoroutine(item));
@@ -36,7 +46,7 @@ class LevelSystem : MonoBehaviour
         yield return new WaitForSeconds(1f);
         _timeText.ResetTime();
         _stageText.IncrementStage();
-        _levelGenerator.GenerateLevel(true, LevelItem.STAR);
+        _levelGenerator.GenerateLevel(true, RandomLevelItem());
         _player.ResetPlayer();
     }
 
@@ -48,7 +58,7 @@ class LevelSystem : MonoBehaviour
 
     public void UpdatePlayerHeight(float height)
     {
-        _heightText.UpdateHeight((int)height);
+        _heightText.UpdateHeight((int)height, (int)_levelGenerator.TotalHeight);
     }
 
     public void KillPlayer()

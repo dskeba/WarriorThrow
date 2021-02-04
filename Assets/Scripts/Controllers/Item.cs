@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
-public class Star : MonoBehaviour
+public class Item : MonoBehaviour
 {
+    [SerializeField]
+    private LevelItem _levelItem;
     private LevelSystem _levelSystem;
 
     private void Awake()
@@ -16,7 +17,7 @@ public class Star : MonoBehaviour
         if (collision.gameObject.tag.Equals("Player"))
         {
             gameObject.SetActive(false);
-            _levelSystem.CompleteLevel(LevelItem.STAR);
+            _levelSystem.CompleteLevel(_levelItem);
         }
     }
 }
