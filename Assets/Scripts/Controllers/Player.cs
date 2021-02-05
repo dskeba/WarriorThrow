@@ -19,8 +19,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private LevelSystem _levelSystem;
 
-    private List<LevelItem> _items = new List<LevelItem>();
-
     public bool IsDead;
 
     private void FixedUpdate()
@@ -39,17 +37,21 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 1, 0);
     }
 
-    public void CompleteLevel(LevelItem item)
+    public void CompleteLevel()
     {
         _sr.color = new Color(1, 0.8f, 0);
-        _items.Add(item);
-        if (item.Equals(LevelItem.HELMET_OF_FARSIGHT)) {
-            _trajectoryLr.positionCount = 30;
-            Color startColor = new Color(1f, 0.9f, 0.1f, 1f);
-            Color endColor = new Color(1f, 0.9f, 0.1f, 0f);
-            _trajectoryLr.startColor = startColor;
-            _trajectoryLr.endColor = endColor;
-        }
+    }
+
+    public void UpdateTrajectoryLine(Color startColor, Color endColor, int posCount)
+    {
+        _trajectoryLr.positionCount = posCount;
+        _trajectoryLr.startColor = startColor;
+        _trajectoryLr.endColor = endColor;
+    }
+
+    public void UpdatePlayerFriction(float friction)
+    {
+        _rb.sharedMaterial.friction = friction;
     }
 
     public void Die()

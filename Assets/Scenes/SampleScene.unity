@@ -299,6 +299,10 @@ MonoBehaviour:
   _stageText: {fileID: 2145755168}
   _finishSound: {fileID: 449752767}
   _levelGenerator: {fileID: 1983163962}
+  _totalPlatforms: 10
+  _widePlatformRatio: 1
+  _spikedPlatformRatio: 0
+  _icePlatformRatio: 0
 --- !u!82 &449752767
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1816,10 +1820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605abaefa3f6fd948ac320907e292bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalPlatforms: 3
-  widePlatformRatio: 0.5
-  spikedPlatformRatio: 0.5
-  icePlatformRatio: 0.5
+  TotalHeight: 0
 --- !u!4 &1983163963
 Transform:
   m_ObjectHideFlags: 0

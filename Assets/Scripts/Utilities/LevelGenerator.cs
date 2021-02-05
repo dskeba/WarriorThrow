@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    [SerializeField]
     private int totalPlatforms;
-    [SerializeField]
     private float widePlatformRatio;
-    [SerializeField]
     private float spikedPlatformRatio;
-    [SerializeField]
     private float icePlatformRatio;
-
     private GameObject backgroundColorPrefab;
     private Dictionary<string, GameObject> platformPrefabs;
     private Dictionary<LevelItem, GameObject> itemPrefabs;
@@ -35,13 +30,17 @@ public class LevelGenerator : MonoBehaviour
         GenerateBackgroundColor();
     }
 
-    public void GenerateLevel(bool destroyLevel, LevelItem item)
+    public void GenerateLevel(bool destroyLevel, LevelItem item, int platforms, float wideRatio, float spikedRatio, float iceRatio)
     {
-        _levelItem = item;
         if (destroyLevel)
         {
             DestoryLevel();
-        } 
+        }
+        _levelItem = item;
+        totalPlatforms = platforms;
+        widePlatformRatio = wideRatio;
+        spikedPlatformRatio = spikedRatio;
+        icePlatformRatio = iceRatio;
         GenerateFirstBg();
         GenerateFirstPlatform();
         for (int i = 0; i < totalPlatforms; i++)

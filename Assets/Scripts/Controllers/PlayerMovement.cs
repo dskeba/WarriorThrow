@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private AudioSource _throwSound;
 
-    private int _startingNumOfTrajectoryPoints = 15;
+    private int _startingNumOfTrajectoryPoints = 12;
     private float _timeBetweenTrajectoryPoints = 0.05f;
     private Vector2 _beginDragPos;
     private Vector2 _endDragPos;
