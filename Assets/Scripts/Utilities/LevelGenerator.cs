@@ -8,11 +8,11 @@ public class LevelGenerator : MonoBehaviour
     private float widePlatformRatio;
     private float spikedPlatformRatio;
     private float icePlatformRatio;
-    private GameObject backgroundColorPrefab;
+    private List<GameObject> bgColorPrefabs = new List<GameObject>();
     private Dictionary<string, GameObject> platformPrefabs;
     private Dictionary<LevelItem, GameObject> itemPrefabs;
     private List<GameObject> instantiatedGameObjects;
-    private GameObject bgPrefab;
+    private List<GameObject> bgPrefabs = new List<GameObject>();
     private GameObject cloudPrefab;
     private GameObject cloud2Prefab;
     private GameObject cloud3Prefab;
@@ -26,8 +26,6 @@ public class LevelGenerator : MonoBehaviour
     private void Awake()
     {
         LoadPrefabs();
-        CacheBgSize();
-        GenerateBackgroundColor();
     }
 
     public void GenerateLevel(bool destroyLevel, LevelItem item, int platforms, float wideRatio, float spikedRatio, float iceRatio)
@@ -36,16 +34,21 @@ public class LevelGenerator : MonoBehaviour
         {
             DestoryLevel();
         }
+
         _levelItem = item;
         totalPlatforms = platforms;
         widePlatformRatio = wideRatio;
         spikedPlatformRatio = spikedRatio;
         icePlatformRatio = iceRatio;
-        GenerateFirstBg();
+
+        int level = Random.Range(0, 4);
+        CacheBgSize(level);
+        GenerateBackgroundColor(level);
+        GenerateFirstBg(level);
         GenerateFirstPlatform();
         for (int i = 0; i < totalPlatforms; i++)
         {
-            GenerateNext(i == totalPlatforms - 1);
+            GenerateNext(i == (totalPlatforms - 1), level);
         }
     }
 
@@ -61,7 +64,15 @@ public class LevelGenerator : MonoBehaviour
     {
         instantiatedGameObjects = new List<GameObject>();
 
-        backgroundColorPrefab = Resources.Load<GameObject>("Prefabs/BackgroundColor");
+        bgPrefabs.Add(Resources.Load<GameObject>("Prefabs/Background1"));
+        bgPrefabs.Add(Resources.Load<GameObject>("Prefabs/Background2"));
+        bgPrefabs.Add(Resources.Load<GameObject>("Prefabs/Background3"));
+        bgPrefabs.Add(Resources.Load<GameObject>("Prefabs/Background4"));
+
+        bgColorPrefabs.Add(Resources.Load<GameObject>("Prefabs/BackgroundColor1"));
+        bgColorPrefabs.Add(Resources.Load<GameObject>("Prefabs/BackgroundColor2"));
+        bgColorPrefabs.Add(Resources.Load<GameObject>("Prefabs/BackgroundColor3"));
+        bgColorPrefabs.Add(Resources.Load<GameObject>("Prefabs/BackgroundColor4"));
 
         platformPrefabs = new Dictionary<string, GameObject>();
         platformPrefabs.Add("Prefabs/Platform", Resources.Load<GameObject>("Prefabs/Platform"));
@@ -77,15 +88,14 @@ public class LevelGenerator : MonoBehaviour
         itemPrefabs.Add(LevelItem.BOOTS_OF_FRICTION, Resources.Load<GameObject>("Prefabs/BootsOfFriction"));
         itemPrefabs.Add(LevelItem.HELMET_OF_FARSIGHT, Resources.Load<GameObject>("Prefabs/HelmetOfFarsight"));
 
-        bgPrefab = Resources.Load<GameObject>("Prefabs/Background");
         cloudPrefab = Resources.Load<GameObject>("Prefabs/Cloud");
         cloud2Prefab = Resources.Load<GameObject>("Prefabs/Cloud2");
         cloud3Prefab = Resources.Load<GameObject>("Prefabs/Cloud3");
     }
 
-    private void CacheBgSize()
+    private void CacheBgSize(int level)
     {
-        SpriteRenderer bgRenderer = bgPrefab.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        SpriteRenderer bgRenderer = bgPrefabs[level].transform.GetChild(0).GetComponent<SpriteRenderer>();
         bgHeight = bgRenderer.bounds.size.y;
     }
 
@@ -96,25 +106,25 @@ public class LevelGenerator : MonoBehaviour
         lastPlatformPos = firstPlatformPos;
     }
 
-    private void GenerateFirstBg()
+    private void GenerateFirstBg(int levelNum)
     {
         Vector3 firstBgPos = new Vector3(0, 0, 0);
-        instantiatedGameObjects.Add(Instantiate(bgPrefab, firstBgPos, Quaternion.identity));
+        instantiatedGameObjects.Add(Instantiate(bgPrefabs[levelNum], firstBgPos, Quaternion.identity));
         lastBgPos = firstBgPos;
     }
 
-    private void GenerateBackgroundColor()
+    private void GenerateBackgroundColor(int levelNum)
     {
-        Instantiate(backgroundColorPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        instantiatedGameObjects.Add(Instantiate(bgColorPrefabs[levelNum], new Vector3(0, 0, 0), Quaternion.identity));
     }
 
-    private void GenerateNext(bool lastPlatform)
+    private void GenerateNext(bool lastPlatform, int level)
     {
         instantiatedGameObjects.Add(GenerateNextPlatform(lastPlatform));
         if (lastPlatformPos.y >= lastBgPos.y)
         {
             instantiatedGameObjects.Add(GenerateNextCloud());
-            instantiatedGameObjects.Add(GenerateNextBg());
+            instantiatedGameObjects.Add(GenerateNextBg(level));
         }
     }
 
@@ -164,13 +174,13 @@ public class LevelGenerator : MonoBehaviour
         return Instantiate(platformPrefabs[platformPrefab], nextPlatformPos, Quaternion.identity);
     }
 
-    private GameObject GenerateNextBg()
+    private GameObject GenerateNextBg(int level)
     {
         float nextX = lastBgPos.x;
         float nextY = lastBgPos.y + bgHeight;
         Vector3 nextPos = new Vector3(nextX, nextY, 0);
         lastBgPos = nextPos;
-        return Instantiate(bgPrefab, nextPos, Quaternion.identity);
+        return Instantiate(bgPrefabs[level], nextPos, Quaternion.identity);
     }
 
     private GameObject GenerateNextCloud()

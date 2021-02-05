@@ -214,8 +214,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 0}
+      key0: {r: 0, g: 0.70425534, b: 1, a: 1}
+      key1: {r: 0, g: 0.21097279, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -299,7 +299,7 @@ MonoBehaviour:
   _stageText: {fileID: 2145755168}
   _finishSound: {fileID: 449752767}
   _levelGenerator: {fileID: 1983163962}
-  _totalPlatforms: 10
+  _totalPlatforms: 1
   _widePlatformRatio: 1
   _spikedPlatformRatio: 0
   _icePlatformRatio: 0
@@ -909,7 +909,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b37a17c34916fb94988502eb27110221, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
