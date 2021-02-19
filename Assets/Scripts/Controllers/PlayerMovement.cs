@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -17,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private LayerMask _platrformLayerMask;
     [SerializeField]
     private AudioSource _throwSound;
+    private GameObject _throwParticlesPrefab;
 
     private int _startingNumOfTrajectoryPoints = 12;
     private float _timeBetweenTrajectoryPoints = 0.05f;
@@ -26,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _trajectoryLr.positionCount = _startingNumOfTrajectoryPoints;
+        _throwParticlesPrefab = Resources.Load<GameObject>("Prefabs/ThrowParticles");
     }
 
     private void OnMouseDown()
@@ -78,6 +81,14 @@ public class PlayerMovement : MonoBehaviour
         }
         _throwSound.Play();
         _rb.velocity = getForceVector();
+        StartCoroutine(EmitParticles());
+    }
+
+    private IEnumerator EmitParticles()
+    {
+        GameObject go = Instantiate(_throwParticlesPrefab, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(1f);
+        Destroy(go);
     }
 
     private bool isGrounded()
