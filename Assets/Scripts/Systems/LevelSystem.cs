@@ -4,12 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum LevelItem
-{
-    HELMET_OF_FARSIGHT,
-    BOOTS_OF_FRICTION
-}
-
 class LevelSystem : MonoBehaviour
 {
     [SerializeField]
@@ -20,6 +14,14 @@ class LevelSystem : MonoBehaviour
     private UITimer _timeText;
     [SerializeField]
     private UIStage _stageText;
+    [SerializeField]
+    private UIInfo _infoText;
+    [SerializeField]
+    private UIInfo _helmetOfFarsightCount;
+    [SerializeField]
+    private UIInfo _shieldOfGravityCount;
+    [SerializeField]
+    private UIInfo _bootsOfFrictionCount;
     [SerializeField]
     private AudioSource _finishSound;
     [SerializeField]
@@ -32,14 +34,24 @@ class LevelSystem : MonoBehaviour
     private float _spikedPlatformRatio;
     [SerializeField]
     private float _icePlatformRatio;
+    [SerializeField]
+    private float _movingPlatformRatio;
+    private bool startGameTextShowing = true;
 
-    private Dictionary<LevelItem, int> _playerItems = new Dictionary<LevelItem, int>();
+    private Dictionary<LevelItem, int> _playerItems = new Dictionary<LevelItem, int>
+    {
+        { LevelItem.HELMET_OF_FARSIGHT, 0 },
+        { LevelItem.SHIELD_OF_GRAVITY, 0 },
+        { LevelItem.BOOTS_OF_FRICTION, 0 }
+    };
     private float _difficultyStep = 0.1f;
 
     private void Start()
     {
         SetPlayerDefaults();
-        _levelGenerator.GenerateLevel(false, RandomLevelItem(), _totalPlatforms, _widePlatformRatio, _spikedPlatformRatio, _icePlatformRatio);
+        _levelGenerator.GenerateLevel(false, RandomLevelItem(), _totalPlatforms, _widePlatformRatio, _spikedPlatformRatio, _icePlatformRatio, _movingPlatformRatio);
+        _infoText.SetText("Get to the top of the level\n\n"
+            + "Drag over the warrior to throw him");
     }
 
     private void SetPlayerDefaults()
@@ -49,7 +61,7 @@ class LevelSystem : MonoBehaviour
 
     private LevelItem RandomLevelItem()
     {
-        return (LevelItem)UnityEngine.Random.Range(0, 2);
+        return (LevelItem)UnityEngine.Random.Range(0, 3);
     }
 
     public void CompleteLevel(LevelItem item)
@@ -57,18 +69,30 @@ class LevelSystem : MonoBehaviour
         StartCoroutine(CompleteLevelCoroutine(item));
     }
 
+    public void Update()
+    {
+        if (startGameTextShowing && Input.GetMouseButtonDown(0))
+        {
+            _infoText.SetText("");
+        }
+    }
+
     public IEnumerator CompleteLevelCoroutine(LevelItem item)
     {
         _finishSound.Play();
         AddPlayerItem(item);
         _player.CompleteLevel();
-        yield return new WaitForSeconds(1f);
+        _infoText.SetText(LevelItemTitles.Get(item) + " Acquired!\n"
+            + LevelItemDescriptions.Get(item));
+        yield return new WaitForSeconds(4f);
+        _infoText.SetText("");
         _timeText.ResetTime();
         _stageText.IncrementStage();
         _widePlatformRatio = Math.Max(0, _widePlatformRatio - _difficultyStep);
         _spikedPlatformRatio = Math.Min(1, _spikedPlatformRatio + _difficultyStep);
         _icePlatformRatio = Math.Min(1, _icePlatformRatio + _difficultyStep);
-        _levelGenerator.GenerateLevel(true, RandomLevelItem(), _totalPlatforms, _widePlatformRatio, _spikedPlatformRatio, _icePlatformRatio);
+        _movingPlatformRatio = Math.Min(1, _icePlatformRatio + _difficultyStep);
+        _levelGenerator.GenerateLevel(true, RandomLevelItem(), _totalPlatforms, _widePlatformRatio, _spikedPlatformRatio, _icePlatformRatio, _movingPlatformRatio);
         _player.ResetPlayer();
     }
 
@@ -96,6 +120,7 @@ class LevelSystem : MonoBehaviour
             _playerItems.Add(item, 1);
         }
         _playerItems[item] += 1;
+        UpdateItemCounts();
         ResolvePlayerItems();
     }
 
@@ -106,6 +131,13 @@ class LevelSystem : MonoBehaviour
             _playerItems.Add(item, _playerItems[item] - 1);
         }
         ResolvePlayerItems();
+    }
+
+    private void UpdateItemCounts()
+    {
+        _helmetOfFarsightCount.SetText("x" + _playerItems[LevelItem.HELMET_OF_FARSIGHT]);
+        _shieldOfGravityCount.SetText("x" + _playerItems[LevelItem.SHIELD_OF_GRAVITY]);
+        _bootsOfFrictionCount.SetText("x" + _playerItems[LevelItem.BOOTS_OF_FRICTION]);
     }
 
     private void ResolvePlayerItems()
@@ -120,10 +152,14 @@ class LevelSystem : MonoBehaviour
         // HELMET OF FARSIGHT
         if (_playerItems.ContainsKey(LevelItem.HELMET_OF_FARSIGHT))
         {
-            Color startColor = new Color(1f, 0.9f, 0.1f, 1f);
-            Color endColor = new Color(1f, 0.9f, 0.1f, 0f);
             int posCount = 12 + (1 * _playerItems[LevelItem.HELMET_OF_FARSIGHT]);
-            _player.UpdateTrajectoryLine(startColor, endColor, posCount);
+            _player.UpdateTrajectoryLine(posCount);
+        }
+
+        // HELMET OF FARSIGHT
+        if (_playerItems.ContainsKey(LevelItem.SHIELD_OF_GRAVITY))
+        {
+            _player.UpdateGravity((float) (1 - (0.1 * _playerItems[LevelItem.SHIELD_OF_GRAVITY])));
         }
     }
 }

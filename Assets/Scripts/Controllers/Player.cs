@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
 
     public void ResetPlayer()
     {
+        UnfreezePlayer();
         IsDead = false;
         _rb.velocity = Vector2.zero;
         _rb.angularVelocity = 0;
@@ -37,16 +38,31 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 1, 0);
     }
 
+    public void FreezePlayer()
+    {
+        _rb.isKinematic = true;
+        _rb.velocity = Vector2.zero;
+    }
+
+    public void UnfreezePlayer()
+    {
+        _rb.isKinematic = false;
+    }
+
+    public void UpdateGravity(float scale)
+    {
+        _rb.gravityScale = scale;
+    }
+
     public void CompleteLevel()
     {
+        FreezePlayer();
         _sr.color = new Color(1, 0.8f, 0);
     }
 
-    public void UpdateTrajectoryLine(Color startColor, Color endColor, int posCount)
+    public void UpdateTrajectoryLine(int posCount)
     {
         _trajectoryLr.positionCount = posCount;
-        _trajectoryLr.startColor = startColor;
-        _trajectoryLr.endColor = endColor;
     }
 
     public void UpdatePlayerFriction(float friction)

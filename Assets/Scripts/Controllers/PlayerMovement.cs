@@ -34,7 +34,6 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        _beginDragPos = transform.position;
     }
 
     private void OnMouseDrag()
@@ -43,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+        _beginDragPos = transform.position;
         _endDragPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3[] positions = new Vector3[2];
         positions[0] = new Vector3(_beginDragPos.x, _beginDragPos.y, -1);
@@ -97,5 +97,21 @@ public class PlayerMovement : MonoBehaviour
 
         // Only grounded if boxcast downward is touching and sides are not touching
         return (boxcastHit.collider && !(linecastHitLeft.collider || linecastHitRight.collider));
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
+        {
+            transform.parent = collision.transform;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
+        {
+            transform.parent = null;
+        }
     }
 }

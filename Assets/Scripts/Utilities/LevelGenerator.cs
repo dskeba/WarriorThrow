@@ -8,6 +8,7 @@ public class LevelGenerator : MonoBehaviour
     private float widePlatformRatio;
     private float spikedPlatformRatio;
     private float icePlatformRatio;
+    private float movingPlatformRatio;
     private List<GameObject> bgColorPrefabs = new List<GameObject>();
     private Dictionary<string, GameObject> platformPrefabs;
     private Dictionary<LevelItem, GameObject> itemPrefabs;
@@ -28,7 +29,7 @@ public class LevelGenerator : MonoBehaviour
         LoadPrefabs();
     }
 
-    public void GenerateLevel(bool destroyLevel, LevelItem item, int platforms, float wideRatio, float spikedRatio, float iceRatio)
+    public void GenerateLevel(bool destroyLevel, LevelItem item, int platforms, float wideRatio, float spikedRatio, float iceRatio, float movingRatio)
     {
         if (destroyLevel)
         {
@@ -40,6 +41,7 @@ public class LevelGenerator : MonoBehaviour
         widePlatformRatio = wideRatio;
         spikedPlatformRatio = spikedRatio;
         icePlatformRatio = iceRatio;
+        movingPlatformRatio = movingRatio;
 
         int level = Random.Range(0, 4);
         CacheBgSize(level);
@@ -87,6 +89,7 @@ public class LevelGenerator : MonoBehaviour
         itemPrefabs = new Dictionary<LevelItem, GameObject>();
         itemPrefabs.Add(LevelItem.BOOTS_OF_FRICTION, Resources.Load<GameObject>("Prefabs/BootsOfFriction"));
         itemPrefabs.Add(LevelItem.HELMET_OF_FARSIGHT, Resources.Load<GameObject>("Prefabs/HelmetOfFarsight"));
+        itemPrefabs.Add(LevelItem.SHIELD_OF_GRAVITY, Resources.Load<GameObject>("Prefabs/ShieldOfGravity"));
 
         cloudPrefab = Resources.Load<GameObject>("Prefabs/Cloud");
         cloud2Prefab = Resources.Load<GameObject>("Prefabs/Cloud2");
@@ -171,7 +174,12 @@ public class LevelGenerator : MonoBehaviour
         {
             platformPrefab += "Ice";
         }
-        return Instantiate(platformPrefabs[platformPrefab], nextPlatformPos, Quaternion.identity);
+        GameObject platform = Instantiate(platformPrefabs[platformPrefab], nextPlatformPos, Quaternion.identity);
+        if (Random.value <= movingPlatformRatio)
+        {
+            platform.GetComponent<MovingPlatform>().move = true;
+        }
+        return platform;
     }
 
     private GameObject GenerateNextBg(int level)
@@ -186,7 +194,7 @@ public class LevelGenerator : MonoBehaviour
     private GameObject GenerateNextCloud()
     {
         float nextX = Random.Range(-30, 30);
-        float nextY = lastBgPos.y;
+        float nextY = lastBgPos.y + 5;
         Vector3 nextPos = new Vector3(nextX, nextY, 0);
         float randomValue = Random.value;
         if (randomValue > 0.66f)
