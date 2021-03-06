@@ -16,6 +16,7 @@ public class Item : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Player"))
         {
+
             gameObject.SetActive(false);
             _levelSystem.CompleteLevel(_levelItem);
         }

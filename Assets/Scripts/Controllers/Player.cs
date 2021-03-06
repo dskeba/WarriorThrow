@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,8 @@ public class Player : MonoBehaviour
     private AudioSource _deathSound;
     [SerializeField]
     private LevelSystem _levelSystem;
+    [SerializeField]
+    private GameObject _itemParticlesPrefab;
 
     public bool IsDead;
 

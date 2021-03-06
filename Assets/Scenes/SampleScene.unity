@@ -514,6 +514,8 @@ MonoBehaviour:
   _spikedPlatformRatio: 0
   _icePlatformRatio: 0
   _movingPlatformRatio: 0
+  _itemParticles: {fileID: 789104687115416143, guid: ed362e890736476448146f5e52170656,
+    type: 3}
 --- !u!82 &449752767
 AudioSource:
   m_ObjectHideFlags: 0
