@@ -51,7 +51,7 @@ class LevelSystem : MonoBehaviour
         SetPlayerDefaults();
         _levelGenerator.GenerateLevel(false, RandomLevelItem(), _totalPlatforms, _widePlatformRatio, _spikedPlatformRatio, _icePlatformRatio, _movingPlatformRatio);
         _infoText.SetText("Get to the top of the level\n\n"
-            + "Drag over the warrior to throw him"); _itemParticlesPrefab = Resources.Load<GameObject>("Prefabs/ThrowParticles");
+            + "Drag over the warrior to throw him");
     }
 
     private void SetPlayerDefaults()
@@ -79,7 +79,6 @@ class LevelSystem : MonoBehaviour
 
     public IEnumerator CompleteLevelCoroutine(LevelItem item)
     {
-        Instantiate(_itemParticlesPrefab, );
         _finishSound.Play();
         AddPlayerItem(item);
         _player.CompleteLevel();
